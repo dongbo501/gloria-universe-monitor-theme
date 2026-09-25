@@ -1,0 +1,11 @@
+# Supplied archive is versioned at upstream/theme.tar.gz.
+/theme.tar.gz
+
+# Generated files; the install archive and its checksum are tracked.
+/theme-api/
+/test-results/
+/.gloria-api-build-*/
+/node_modules/
+.DS_Store
+.env
+.env.*
