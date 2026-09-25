@@ -2,6 +2,8 @@
 
 Gloria Universe 的极简探针配置接口适配版。主题短名为 `gloria-universe`，当前版本为 `1.2.1`。
 
+原主题是 [TonyStarkJr2021/komari-theme-Gloria-Universe](https://github.com/TonyStarkJr2021/komari-theme-Gloria-Universe)，提供完整的 Komari 主题 Vue/TypeScript/Vite 源码。本项目基于 dongbo501 从该主题修改得到的极简探针移植包，进一步适配极简探针的主题配置保存接口。
+
 可安装文件为仓库中的 [`theme-api.tar.gz`](theme-api.tar.gz)，也可[直接下载最新发布的 theme.tar.gz](https://github.com/dongbo501/gloria-universe-monitor-theme/releases/latest/download/theme.tar.gz)。两者内容相同；原始主题包保存在 `upstream/theme.tar.gz`，仅作为构建输入。
 
 ## 安装与使用
@@ -30,7 +32,7 @@ Gloria Universe 的极简探针配置接口适配版。主题短名为 `gloria-u
 
 ## 文件与维护
 
-原压缩包仅包含编译产物，未附 Vue/Vite 源码。此目录提供针对该包的可重复构建脚本，并将新配置接口逻辑保留为可读源码：
+上游 Komari 主题的完整源码见[上游 src 目录](https://github.com/TonyStarkJr2021/komari-theme-Gloria-Universe/tree/main/src)。本仓库的构建基线是已经适配极简探针的压缩包，该包未附其移植修改对应的 Vue/Vite 工程。因此当前构建流程仍以移植包为输入，并将本次配置接口适配逻辑保留为可读源码；它尚未改成直接从上游 Vue 工程构建极简探针主题。
 
 - `src/theme-config-api.js`：默认值合并、字段校验、GET/PUT 和请求错误处理。
 - `src/theme-persistence.service.js`：登录检查、编辑冲突检查、保存及确认。
@@ -64,4 +66,6 @@ npm run test:browser
 
 ## 许可证与来源
 
-保留原主题的 [MIT 许可证](LICENSE) 和包内素材来源说明。原始包信息见 [upstream/README.md](upstream/README.md)。本仓库包含配置接口适配源码，并不包含原主题未提供的完整 Vue/Vite 工程。
+上游项目：[komari-theme-Gloria-Universe](https://github.com/TonyStarkJr2021/komari-theme-Gloria-Universe)，作者 `TonyStarkJr2021`，采用 MIT 许可证。极简探针移植由 `dongbo501` 基于该主题完成，本仓库继续提供配置接口适配。
+
+保留原主题的 [MIT 许可证](LICENSE) 和包内素材来源说明。上游与移植包的关系见 [upstream/README.md](upstream/README.md)。完整 Komari 源码在上游仓库中公开；当前仓库包含极简探针移植后的编译基线和配置接口适配源码。
