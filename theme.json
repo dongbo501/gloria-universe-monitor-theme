@@ -1,0 +1,667 @@
+{
+  "name": "Gloria Universe",
+  "short": "gloria-universe",
+  "description": "邓紫棋粉丝向 GLORIA 数字宇宙监控主题：星辰节点、星网地图、舞台能量与 I AM GLORIA 彩蛋（移植自 Komari 主题）",
+  "version": "1.3.0",
+  "author": "TonyStarkJr2021",
+  "url": "https://github.com/dongbo501/gloria-universe-monitor-theme",
+  "config": [
+    {
+      "type": "title",
+      "label": "01 · 宇宙模式与基础连接"
+    },
+    {
+      "key": "themeMode",
+      "type": "select",
+      "label": "默认主题模式",
+      "default": "dark",
+      "options": [
+        {
+          "value": "beijing",
+          "label": "按北京时间自动"
+        },
+        {
+          "value": "light",
+          "label": "星光模式"
+        },
+        {
+          "value": "dark",
+          "label": "深空模式"
+        }
+      ],
+      "help": "beijing=北京时间 07:00-18:59 使用星光模式、其余时间使用深空模式；light=星光模式；dark=深空模式。前端右上角按钮可仅为当前浏览器临时切换。"
+    },
+    {
+      "key": "dataUpdateInterval",
+      "type": "number",
+      "label": "星辰数据更新间隔",
+      "default": 3,
+      "min": 1,
+      "max": 60,
+      "help": "HTTP 轮询模式下节点实时数据的刷新间隔，单位：秒（1-60）。WebSocket 模式固定由 hub 每 2 秒推送。"
+    },
+    {
+      "key": "rpcTransportMode",
+      "type": "select",
+      "label": "星网数据连接方式",
+      "default": "http",
+      "options": [
+        {
+          "value": "http",
+          "label": "HTTP 轮询"
+        },
+        {
+          "value": "websocket",
+          "label": "WebSocket 实时推送"
+        }
+      ],
+      "help": "http=按下方间隔轮询 /api/nodes；websocket=使用 hub 的 /api/ws 每 2 秒推送（反向代理需放行 WebSocket）。"
+    },
+    {
+      "key": "defaultViewMode",
+      "type": "select",
+      "label": "默认星辰视图",
+      "default": "card",
+      "options": [
+        {
+          "value": "card",
+          "label": "卡片"
+        },
+        {
+          "value": "list",
+          "label": "列表"
+        }
+      ],
+      "help": "card=节点卡片视图；list=节点列表视图，对应首页右上角的卡片/列表切换按钮。"
+    },
+    {
+      "key": "nodeCardSize",
+      "type": "select",
+      "label": "星辰卡片尺寸",
+      "default": "compact",
+      "options": [
+        {
+          "value": "mini",
+          "label": "迷你"
+        },
+        {
+          "value": "compact",
+          "label": "紧凑"
+        },
+        {
+          "value": "comfortable",
+          "label": "舒适"
+        },
+        {
+          "value": "large",
+          "label": "宽松"
+        }
+      ],
+      "help": "mini=迷你高密度；compact=紧凑（默认）；comfortable=舒适；large=宽松。"
+    },
+    {
+      "type": "title",
+      "label": "02 · 首页舞台、星网、歌曲与彩蛋"
+    },
+    {
+      "key": "alertEnabled",
+      "type": "boolean",
+      "label": "显示星网公告",
+      "default": false,
+      "help": "在首页节点区域上方显示自定义星网公告。"
+    },
+    {
+      "key": "alertTitle",
+      "type": "string",
+      "label": "星网公告标题",
+      "default": "",
+      "help": "星网公告的标题文字。"
+    },
+    {
+      "key": "alertContent",
+      "type": "text",
+      "label": "星网公告内容",
+      "default": "",
+      "help": "星网公告的正文，支持简单 Markdown 格式。"
+    },
+    {
+      "key": "stopEarth",
+      "type": "boolean",
+      "label": "暂停星网亮点呼吸",
+      "default": false,
+      "help": "暂停 GLORIA STAR NETWORK 星网地图上橘黄色节点亮点的呼吸动画。"
+    },
+    {
+      "key": "hideEarth",
+      "type": "boolean",
+      "label": "隐藏 GLORIA 星网地图",
+      "default": false,
+      "help": "隐藏 GLORIA STAR NETWORK 星网地图，保留左侧宇宙总览指标。"
+    },
+    {
+      "key": "hideGeneralCard",
+      "type": "boolean",
+      "label": "隐藏首页宇宙总览",
+      "default": false,
+      "help": "同时隐藏首页顶部的宇宙总览指标和 GLORIA 星网地图。"
+    },
+    {
+      "key": "fanLabelsEnabled",
+      "type": "boolean",
+      "label": "显示邓紫棋歌曲标签",
+      "default": true,
+      "help": "从邓紫棋歌曲库为当前节点批次随机分配不重复歌曲，显示为《歌曲名》；关闭后仅显示节点原有标签。"
+    },
+    {
+      "key": "fanAudioPreviewEnabled",
+      "type": "boolean",
+      "label": "启用歌曲片段悬停试听",
+      "default": false,
+      "help": "节点卡片悬停时试听对应歌曲，星网地图节点亮点悬停时试听地区映射歌曲。主题不附带或下载音乐；仅会播放下方配置中由管理员自行提供并确认有权使用的音频。浏览器首次播放前通常需要用户先点击页面。"
+    },
+    {
+      "key": "fanAudioPreviewVolume",
+      "type": "number",
+      "label": "歌曲片段试听音量",
+      "default": 35,
+      "min": 0,
+      "max": 100,
+      "help": "试听音量百分比，范围 0-100；建议 20-40。"
+    },
+    {
+      "key": "fanAudioPreviewDuration",
+      "type": "number",
+      "label": "单次歌曲片段时长",
+      "default": 25,
+      "min": 20,
+      "max": 30,
+      "help": "每次悬停最多播放的秒数，主题会限制在 20-30 秒；建议预先裁剪好相同时长的副歌或精彩片段。"
+    },
+    {
+      "key": "fanAudioTrackSources",
+      "type": "text",
+      "label": "歌曲片段音频映射 JSON",
+      "default": "{}",
+      "help": "格式：{\"多远都要在一起\":\"https://example.com/authorized/多远都要在一起.mp3\"}。只支持 HTTPS 或站内 / 路径；只配置已获授权的 20-30 秒音频片段。设置对所有访客公开。"
+    },
+    {
+      "key": "regionAudioTracks",
+      "type": "text",
+      "label": "国家或地区歌曲映射 JSON",
+      "default": "{\"CN\":\"光年之外\",\"HK\":\"多远都要在一起\",\"MO\":\"句号\",\"TW\":\"泡沫\",\"SG\":\"GLORIA\",\"JP\":\"FIND YOU\",\"US\":\"Where Did U Go\",\"CA\":\"天空没有极限\",\"UK\":\"夜的尽头\",\"DE\":\"冰河时代\",\"FR\":\"于是\",\"KR\":\"好想好想你\",\"PH\":\"让世界暂停一分钟\",\"AU\":\"新的心跳\",\"MY\":\"来自天堂的魔鬼\"}",
+      "help": "国家或地区代码对应歌曲名；歌曲名必须同时存在于上方音频映射中才会播放。该映射是主题默认建议，可按自己的节点和喜好修改。"
+    },
+    {
+      "key": "gloriaHeroType",
+      "type": "select",
+      "label": "WAKE GLORIA 彩蛋素材类型",
+      "default": "image",
+      "options": [
+        {
+          "value": "image",
+          "label": "图片"
+        },
+        {
+          "value": "video",
+          "label": "视频"
+        }
+      ],
+      "help": "image=彩蛋背景图片；video=静音循环背景视频。留空自定义地址时始终使用内置 I AM GLORIA 2.0 婚纱舞台原图。"
+    },
+    {
+      "key": "gloriaHeroUrl",
+      "type": "string",
+      "label": "WAKE GLORIA 彩蛋自定义素材",
+      "default": "",
+      "help": "留空使用内置 I AM GLORIA 2.0 婚纱舞台原图和“如果神让你看见”文字；左上角 Crystal G 使用独立的光束彩蛋，不受此项影响。可填写 HTTPS 地址；请确保拥有素材使用权。"
+    },
+    {
+      "key": "visitorInfoEnabled",
+      "type": "boolean",
+      "label": "显示棋士/领航员信息",
+      "default": true,
+      "help": "开启后显示底部 IP 星网状态条；宽屏左下角同时显示详情卡。访客 IP 由浏览器直接向第三方 IP 查询服务获取。访客称为“棋士”，已登录站长称为“领航员”。"
+    },
+    {
+      "key": "glassColorPreset",
+      "type": "select",
+      "label": "卡片玻璃预设",
+      "default": "午夜",
+      "options": [
+        {
+          "value": "翡翠",
+          "label": "翡翠"
+        },
+        {
+          "value": "柔和",
+          "label": "柔和"
+        },
+        {
+          "value": "高对比",
+          "label": "高对比"
+        },
+        {
+          "value": "午夜",
+          "label": "午夜"
+        },
+        {
+          "value": "自定义",
+          "label": "自定义"
+        }
+      ],
+      "help": "控制星光与深空两种模式的卡片透明度、文字和边框；当前主题推荐“午夜”。预设名称不代表主题模式；选择“自定义”后读取下方 JSON。"
+    },
+    {
+      "key": "colorVisionMode",
+      "type": "select",
+      "label": "色觉辅助配色",
+      "default": "标准",
+      "options": [
+        {
+          "value": "标准",
+          "label": "标准"
+        },
+        {
+          "value": "色觉友好",
+          "label": "色觉友好"
+        }
+      ],
+      "help": "色觉友好使用蓝、蓝绿、橙、朱红、紫红，并为图表和状态增加线型、纹理、文字或图标区分。"
+    },
+    {
+      "key": "glassCustomColors",
+      "type": "text",
+      "label": "自定义星光/深空玻璃 JSON",
+      "default": "{\"lightCard\":\"#ffffffa8\",\"lightControl\":\"#ffffffb8\",\"lightText\":\"#24113f\",\"lightMutedText\":\"#594868\",\"lightBorder\":\"#ffffffcc\",\"darkCard\":\"#07111fcc\",\"darkControl\":\"#07111fd9\",\"darkText\":\"#eaf2ff\",\"darkMutedText\":\"#c7d2fe\",\"darkBorder\":\"#60a5fa40\"}",
+      "help": "light*=星光模式，dark*=深空模式；Card=卡片，Control=控制条，Text=主文字，MutedText=次文字，Border=边框。支持 #RRGGBB 和带透明度的 #RRGGBBAA。"
+    },
+    {
+      "type": "title",
+      "label": "03 · 首页宇宙总览指标"
+    },
+    {
+      "key": "generalCardPreset",
+      "type": "select",
+      "label": "宇宙总览指标方案",
+      "default": "自定义",
+      "options": [
+        {
+          "value": "官方",
+          "label": "官方"
+        },
+        {
+          "value": "基础",
+          "label": "基础"
+        },
+        {
+          "value": "运维",
+          "label": "运维"
+        },
+        {
+          "value": "资源",
+          "label": "资源"
+        },
+        {
+          "value": "财务",
+          "label": "财务"
+        },
+        {
+          "value": "流量",
+          "label": "流量"
+        },
+        {
+          "value": "GPU",
+          "label": "GPU"
+        },
+        {
+          "value": "资产",
+          "label": "资产"
+        },
+        {
+          "value": "完整",
+          "label": "完整"
+        },
+        {
+          "value": "自定义",
+          "label": "自定义"
+        }
+      ],
+      "help": "当前默认与前端六项指标一一对应：记忆水晶、星辰余辉、能量输出、星库、累计能量、能量接收。选择“自定义”后读取下方 keys。"
+    },
+    {
+      "key": "generalCardKeys",
+      "type": "text",
+      "label": "自定义宇宙总览指标 keys",
+      "default": "memory\nremainingValue\nuploadSpeed\ndisk\ntotalTraffic\ndownloadSpeed",
+      "help": "逗号、空格或换行分隔。memory=CRYSTAL MEMORY · 记忆水晶；remainingValue=STAR VALUE · 星辰余辉；uploadSpeed=ENERGY OUT · 能量输出；disk=STAR VAULT · 星库；totalTraffic=ENERGY ARCHIVE · 累计能量；downloadSpeed=ENERGY IN · 能量接收。"
+    },
+    {
+      "type": "title",
+      "label": "04 · 领航员工具与隐私"
+    },
+    {
+      "key": "homeToolsEnabled",
+      "type": "boolean",
+      "label": "登录后显示领航员工具",
+      "default": true,
+      "help": "站长登录后，在顶部工具入口显示拓扑、性价比、健康和导出功能。"
+    },
+    {
+      "key": "hideAdminEntryWhenLoggedOut",
+      "type": "boolean",
+      "label": "隐藏后台入口",
+      "default": false,
+      "help": "未登录时隐藏顶部后台管理入口（/admin）。"
+    },
+    {
+      "key": "hidePriceWhenLoggedOut",
+      "type": "boolean",
+      "label": "未登录隐藏价格",
+      "default": false,
+      "help": "未登录时不绘制价格、剩余价值和费用类卡片（只是不显示，接口仍会返回价格）；在线天数仍会显示。"
+    },
+    {
+      "key": "providerAliases",
+      "type": "string",
+      "label": "厂商自定义别名",
+      "default": "",
+      "help": "格式：Provider:alias1,alias2;Provider2:alias。"
+    },
+    {
+      "key": "disablePageAnimation",
+      "type": "boolean",
+      "label": "减弱过渡动画",
+      "default": false,
+      "help": "减少页面过渡动画效果，提升访问速度和响应性"
+    },
+    {
+      "type": "title",
+      "label": "05 · 星辰卡片、列表与快捷控制"
+    },
+    {
+      "key": "homeQuickControlsEnabled",
+      "type": "boolean",
+      "label": "显示星网快捷控制",
+      "default": true,
+      "help": "在星辰分组旁显示星辰珍藏、累计能量、能量峰值、沉睡星辰、过载星辰、星约将尽等快捷按钮。"
+    },
+    {
+      "key": "homeQuickControlPreset",
+      "type": "select",
+      "label": "快捷控制方案",
+      "default": "完整",
+      "options": [
+        {
+          "value": "基础",
+          "label": "基础"
+        },
+        {
+          "value": "流量",
+          "label": "流量"
+        },
+        {
+          "value": "运维",
+          "label": "运维"
+        },
+        {
+          "value": "完整",
+          "label": "完整"
+        },
+        {
+          "value": "自定义",
+          "label": "自定义"
+        }
+      ],
+      "help": "自定义时读取下方 keys。"
+    },
+    {
+      "key": "homeQuickControlKeys",
+      "type": "text",
+      "label": "自定义快捷按钮 keys",
+      "default": "favorite\ntotalTraffic\npeak\noffline",
+      "help": "逗号、空格或换行分隔。 favorite=星辰珍藏； totalTraffic=累计能量； upload=能量输出； download=能量接收； peak=能量峰值； offline=沉睡星辰； highLoad=过载星辰； expiring=星约将尽。"
+    },
+    {
+      "key": "nodeListMetadataEnabled",
+      "type": "boolean",
+      "label": "列表信息栏",
+      "default": true,
+      "help": "在列表视图显示节点信息栏；关闭后隐藏厂商、地区和分组信息列。"
+    },
+    {
+      "key": "nodeListMetadataFields",
+      "type": "text",
+      "label": "列表信息字段 keys",
+      "default": "provider\nregion\ngroup",
+      "help": "逗号、空格或换行分隔。 provider=厂商（按节点名称识别）； region=地区； group=分组； city=城市、asn=ASN（需要节点地址，仅站长登录后可用）。"
+    },
+    {
+      "key": "nodeListCustomTagsVisible",
+      "type": "boolean",
+      "label": "列表显示自定义标签",
+      "default": true,
+      "help": "列表信息字段包含 tags 时，是否显示节点自定义标签；无标签节点不会显示空标签。"
+    },
+    {
+      "key": "offlineNodesLast",
+      "type": "boolean",
+      "label": "沉睡星辰置底",
+      "default": false,
+      "help": "筛选或排序时优先显示已点亮的星辰。"
+    },
+    {
+      "key": "homeHighLoadThreshold",
+      "type": "number",
+      "label": "过载星辰阈值",
+      "default": 80,
+      "min": 1,
+      "max": 100,
+      "help": "核心（CPU）、水晶记忆（内存）或星库（硬盘）占用达到该百分比时归为过载星辰（1-100）。"
+    },
+    {
+      "key": "homeTrafficWarningThreshold",
+      "type": "number",
+      "label": "能量流量预警阈值",
+      "default": 80,
+      "min": 1,
+      "max": 100,
+      "help": "节点能量（流量）配额使用率达到该百分比时归为流量预警（1-100）。"
+    },
+    {
+      "key": "homeExpiringDays",
+      "type": "number",
+      "label": "星约将尽天数",
+      "default": 30,
+      "min": 1,
+      "max": 3650,
+      "help": "星约余期小于等于该值时归为星约将尽（1-3650 天）。"
+    },
+    {
+      "key": "diskPredictionEnabled",
+      "type": "boolean",
+      "label": "启用磁盘耗尽预测",
+      "default": false,
+      "help": "基于负载历史里的磁盘用量趋势预测耗尽时间；样本少于 2 天或未增长时不显示"
+    },
+    {
+      "key": "diskPredictionThresholdDays",
+      "type": "number",
+      "label": "磁盘预测预警天数",
+      "default": 30,
+      "min": 1,
+      "max": 3650,
+      "help": "预计剩余天数小于等于该值时在节点卡片和详情负载图中显示提示（1-3650）"
+    },
+    {
+      "type": "title",
+      "label": "06 · 星辰详情概览卡片"
+    },
+    {
+      "key": "nodeDetailSectionTabsEnabled",
+      "type": "boolean",
+      "label": "详情页分区标签页",
+      "default": false,
+      "help": "默认关闭，保持节点详情页纵向连续展示；开启后按概览、负载、延迟分区显示。"
+    },
+    {
+      "key": "detailMetricCardPreset",
+      "type": "select",
+      "label": "详情概览卡片方案",
+      "default": "财务",
+      "options": [
+        {
+          "value": "财务",
+          "label": "财务"
+        },
+        {
+          "value": "状态",
+          "label": "状态"
+        },
+        {
+          "value": "资源",
+          "label": "资源"
+        },
+        {
+          "value": "网络",
+          "label": "网络"
+        },
+        {
+          "value": "GPU",
+          "label": "GPU"
+        },
+        {
+          "value": "综合",
+          "label": "综合"
+        },
+        {
+          "value": "自定义",
+          "label": "自定义"
+        }
+      ],
+      "help": "宽屏每行 4 张，中屏 3 张，移动端 2 张。财务/状态/网络/GPU=8 张；资源=12 张；综合=16 张；自定义读取下方 keys。"
+    },
+    {
+      "key": "detailMetricCardKeys",
+      "type": "text",
+      "label": "自定义详情卡片 keys",
+      "default": "nodePrice\nmonthlyCost\nremainingTime\nremainingValue\ntotalTraffic\ntrafficQuota\nuptime\nconnections",
+      "help": "逗号、空格或换行分隔。 nodePrice=节点价格； monthlyCost=月均支出； remainingTime=剩余时间； remainingValue=剩余价值； cpuUsage=CPU使用率； memoryUsage=内存使用率； swapUsage=交换内存使用率； diskUsage=硬盘使用率； load=系统负载； processes=进程数； connections=连接数； uptime=运行时间； uploadSpeed=实时上行； downloadSpeed=实时下行； totalTraffic=本期流量； trafficQuota=流量配额。"
+    },
+    {
+      "type": "title",
+      "label": "07 · 星辰详情监控图表"
+    },
+    {
+      "key": "chartDashboardPreset",
+      "type": "select",
+      "label": "详情负载图方案",
+      "default": "默认",
+      "options": [
+        {
+          "value": "默认",
+          "label": "默认"
+        },
+        {
+          "value": "精简",
+          "label": "精简"
+        },
+        {
+          "value": "资源",
+          "label": "资源"
+        },
+        {
+          "value": "网络",
+          "label": "网络"
+        },
+        {
+          "value": "GPU",
+          "label": "GPU"
+        },
+        {
+          "value": "延迟",
+          "label": "延迟"
+        },
+        {
+          "value": "运维",
+          "label": "运维"
+        },
+        {
+          "value": "完整",
+          "label": "完整"
+        },
+        {
+          "value": "自定义",
+          "label": "自定义"
+        }
+      ],
+      "help": "资源、网络、GPU、延迟和运维按指标族组合；完整覆盖官方 25 个指标。自定义读取下方 keys。"
+    },
+    {
+      "key": "chartDashboardTemplate",
+      "type": "text",
+      "label": "自定义详情图表 keys",
+      "default": "cpu\nmemory\ndisk\nnetwork\nconnections\nprocess",
+      "help": "逗号、空格或换行分隔。 cpu=CPU； memory=内存； disk=磁盘； network=实时上下行； connections=TCP/UDP（仅实时）； process=进程（仅实时）； ping=延迟； pingLoss=丢包。"
+    },
+    {
+      "type": "title",
+      "label": "08 · 星光/深空自定义背景"
+    },
+    {
+      "key": "backgroundEnabled",
+      "type": "boolean",
+      "label": "启用自定义模式背景",
+      "default": false,
+      "help": "开启后使用下方地址替换主题内置的星光水晶舞台背景和深空演唱会背景；每种模式可单独设置。"
+    },
+    {
+      "key": "backgroundType",
+      "type": "select",
+      "label": "自定义背景素材类型",
+      "default": "image",
+      "options": [
+        {
+          "value": "image",
+          "label": "图片"
+        },
+        {
+          "value": "video",
+          "label": "视频"
+        }
+      ],
+      "help": "image=静态背景图片；video=自动静音循环的背景视频。"
+    },
+    {
+      "key": "lightBackgroundUrl",
+      "type": "string",
+      "label": "星光模式背景地址",
+      "default": "",
+      "help": "留空使用内置流光水晶舞台背景。支持 HTTPS 地址或站内 / 路径。"
+    },
+    {
+      "key": "darkBackgroundUrl",
+      "type": "string",
+      "label": "深空模式背景地址",
+      "default": "",
+      "help": "留空使用内置深空演唱会舞台背景。支持 HTTPS 地址或站内 / 路径。"
+    },
+    {
+      "key": "backgroundBlur",
+      "type": "number",
+      "label": "自定义背景模糊半径",
+      "default": 0,
+      "min": 0,
+      "max": 200,
+      "help": "对自定义背景素材应用高斯模糊，单位：px；0 表示不模糊。"
+    },
+    {
+      "key": "backgroundOverlay",
+      "type": "number",
+      "label": "自定义背景遮罩强度",
+      "default": 0,
+      "min": -100,
+      "max": 100,
+      "help": "范围 -100 到 100；0 不处理，正数叠加黑色遮罩，负数降低背景素材不透明度。"
+    }
+  ]
+}
